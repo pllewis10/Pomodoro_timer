@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import classNames from "../utils/class-names";
 import useInterval from "../utils/useInterval";
 
-// These functions are defined outside of the component to insure they do not have access to state
-// and are, therefore more likely to be pure.
-
 /**
  * Update the session state with new state after each tick of the interval.
  * @param prevState
@@ -51,23 +48,19 @@ function nextSession(focusDuration, breakDuration) {
 }
 
 function Pomodoro() {
-  // Timer starts out paused
+  
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  // The current session - null where there is no session running
+
   const [session, setSession] = useState(null);
   const [elapsed, setElapsed] = useState(0);
 
-  // ToDo: Allow the user to adjust the focus and break duration.
+ 
   const [focusDuration, setFocusDuration] = useState(25);
   const [breakDuration, setBreakDuration] = useState(5);
   const [aria, setAria] = useState(0);
   const [breakLeft, setBreakLeft] = useState(0);
 
-  /**
-   * Custom hook that invokes the callback function every second
-   *
-   * NOTE: You will not need to make changes to the callback function
-   */
+
   useInterval(
     () => {
       setBreakLeft(breakLeft + 1);
@@ -86,25 +79,18 @@ function Pomodoro() {
     isTimerRunning ? 1000 : null
   );
 
-  //    setAriaValue(100*(focusTime * 60 - focusRun)/(focusTime*60))
-  //  }
-  //   else {setAriaValue(100*(breakTime * 60 - breakRun)/(breakTime*60))
-
   useInterval(() => {
     if (session && session.timeRemaining) {
       return setElapsed(elapsed + 1);
     }
   }, 1000);
-  /**
-   * Called whenever the play/pause button is clicked.
-   */
+
   function playPause() {
     setIsTimerRunning((prevState) => {
       const nextState = !prevState;
       if (nextState) {
         setSession((prevStateSession) => {
-          // If the timer is starting and the previous session is null,
-          // start a focusing session.
+      
           if (prevStateSession === null) {
             return {
               label: "Focusing",
@@ -117,11 +103,7 @@ function Pomodoro() {
       return nextState;
     });
   }
-  //   console.log(session && Math.abs(session.timeRemaining -focusDuration*60), 'elapsed')
-  //   console.log(session && (focusDuration * 60 - session.timeRemaining)*.1)
-  //   console.log(focusDuration - elapsed)
-  //   console.log((session.label.toLowerCase().indexOf("ocus") > 0 ? focusDuration : breakDuration)*100)
-  //   console.log(session.timeRemaining/(session.label.toLowerCase().indexOf("ocus") > 0 ? focusDuration : breakDuration)*100)
+
 
   return (
     <div className="pomodoro">
@@ -141,11 +123,11 @@ function Pomodoro() {
         <div className="col">
           <div className="input-group input-group-lg mb-2">
             <span className="input-group-text" data-testid="duration-focus">
-              {/* TODO: Update this text to display the current focus session duration */}
+              
               Focus Duration: {("0" + focusDuration).substr(-2)}:00
             </span>
             <div className="input-group-append">
-              {/* TODO: Implement decreasing focus duration and disable during a focus or break session */}
+              
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -156,7 +138,7 @@ function Pomodoro() {
               >
                 <span className="oi oi-minus" />
               </button>
-              {/* TODO: Implement increasing focus duration  and disable during a focus or break session */}
+              
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -174,11 +156,11 @@ function Pomodoro() {
           <div className="float-right">
             <div className="input-group input-group-lg mb-2">
               <span className="input-group-text" data-testid="duration-break">
-                {/* TODO: Update this text to display the current break session duration */}
+                
                 Break Duration: {("0" + breakDuration).substr(-2)}:00
               </span>
               <div className="input-group-append">
-                {/* TODO: Implement decreasing break duration and disable during a focus or break session*/}
+                
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -191,7 +173,7 @@ function Pomodoro() {
                 >
                   <span className="oi oi-minus" />
                 </button>
-                {/* TODO: Implement increasing break duration and disable during a focus or break session*/}
+                
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -231,8 +213,7 @@ function Pomodoro() {
                 })}
               />
             </button>
-            {/* TODO: Implement stopping the current focus or break session. and disable the stop button when there is no active session */}
-            {/* TODO: Disable the stop button when there is no active session */}
+            
             <button
               type="button"
               disabled={!isTimerRunning}
@@ -251,11 +232,11 @@ function Pomodoro() {
         </div>
       </div>
       <div>
-        {/* TODO: This area should show only when there is an active focus or break - i.e. the session is running or is paused */}
+        
         {session && (
           <div className="row mb-2">
             <div className="col">
-              {/* TODO: Update message below to include current session (Focusing or On Break) total duration */}
+              
               <h2 data-testid="session-title">
                 {session && session.label} for{" "}
                 {(
@@ -266,7 +247,7 @@ function Pomodoro() {
                 ).substr(-2)}
                 :00 minutes
               </h2>
-              {/* TODO: Update message below correctly format the time remaining in the current session */}
+              
               <p className="lead" data-testid="session-sub-title">
                 {session && fmtMSS(session.timeRemaining)} remaining
               </p>
@@ -282,8 +263,8 @@ function Pomodoro() {
                   role="progressbar"
                   aria-valuemin="0"
                   aria-valuemax="100"
-                  aria-valuenow={aria} // TODO: Increase aria-valuenow as elapsed time increases
-                  style={{ width: `${aria}%` }} // TODO: Increase width % as elapsed time increases
+                  aria-valuenow={aria}
+                  style={{ width: `${aria}%` }}
                 />
               </div>
             </div>
